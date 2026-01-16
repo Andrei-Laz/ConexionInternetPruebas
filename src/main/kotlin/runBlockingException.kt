@@ -1,8 +1,10 @@
 import kotlinx.coroutines.*
 
+/*In this case the exeption is being cought by the runBlocking method*/
+
 fun main() {
     runBlocking {
-        println("Weather forecast")
+        println("Weather forecast: ")
         try {
             println(getWeatherReport())
             println("Have a good day!")
@@ -13,18 +15,18 @@ fun main() {
     }
 }
 
-suspend fun getWeatherReport() = coroutineScope {
-    val forecast = async { getForecast() }
-    val temperature = async { getTemperature() }
+private suspend fun getWeatherReport() = coroutineScope {
+    val forecast: Deferred<String> = async { getForecast() }
+    val temperature: Deferred<String> = async { getTemperature() }
     "${forecast.await()} ${temperature.await()}"
 }
 
-suspend fun getForecast(): String {
+private suspend fun getForecast(): String {
     delay(1000)
     return "Sunny"
 }
 
-suspend fun getTemperature(): String {
+private suspend fun getTemperature(): String {
     delay(500)
     throw AssertionError("Temperature is invalid")
     return "30\u00b0C"
